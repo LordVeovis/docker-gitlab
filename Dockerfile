@@ -44,7 +44,8 @@ RUN apk add --no-cache -t _build alpine-sdk coreutils go ruby2.3-dev zlib-dev ic
     sudo -u ${GITLAB_USER} -H bundle exec rake gitlab:shell:install REDIS_URL=unix:/var/run/redis/redis.sock RAILS_ENV=production SKIP_STORAGE_VALIDATION=true && \
     rm -R /home/git/gitlab-shell/go /home/git/gitlab-shell/go_build && \
     sudo -u ${GITLAB_USER} -H bundle exec rake "gitlab:workhorse:install[/home/git/gitlab-workhorse]" RAILS_ENV=production && \
-    rm -R /home/git/gitlab-workhorse/_build && \
+    install /home/git/gitlab-workhorse/gitlab-* /usr/local/bin/ && \
+    rm -R /home/git/gitlab-workhorse/ && \
     sudo -u ${GITLAB_USER} -H bundle exec rake "gitlab:gitaly:install[/home/git/gitaly]" RAILS_ENV=production && \
     mv /home/git/gitaly/ruby /home/git/gitaly-ruby && \
     mv /home/git/gitaly/config.toml.example /home/git/gitaly-ruby/ && \

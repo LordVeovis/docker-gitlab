@@ -130,8 +130,7 @@ start_gitlab() {
     # Because gitlab-workhorse has multiple executables we need to fix
     # the PATH.
     echo $$ > $gitlab_workhorse_pid_path
-    exec /usr/bin/env PATH=$gitlab_workhorse_dir:$PATH \
-        gitlab-workhorse $gitlab_workhorse_options \
+    exec gitlab-workhorse $gitlab_workhorse_options \
       >> $gitlab_workhorse_log 2>&1
   fi
 }
