@@ -4,7 +4,7 @@ COPY veovis-59b4837b.rsa.pub /etc/apk/keys/
 
 RUN apk upgrade --no-cache && \
     echo -e 'http://alpine.kveer.fr/3.6/main\nhttp://alpine.kveer.fr/3.6/kveer' >> /etc/apk/repositories && \
-    apk add --no-cache runit nginx mariadb-client-libs openssh-server \
+    apk add --no-cache bash runit nginx mariadb-client-libs openssh-server su-exec \
         git go nodejs yarn redis sudo tzdata icu-libs libre2
 
 ARG GITLAB_SOURCE=https://gitlab.com/gitlab-org/gitlab-ce.git
@@ -62,6 +62,8 @@ RUN cd ${GITLAB_HOME} && \
 COPY docker-entrypoint.sh /
 COPY services /etc/sv
 COPY kveer.rake "${GITLAB_HOME}"/lib/tasks
+
+RUN apk add --no-cache su-exec
 
 VOLUME [ "${GITLAB_HOME}/public/uploads", "${GITLAB_HOME}/builds", "${GITLAB_HOME}/shared/artifacts", "${GITLAB_HOME}/shared/public" ]
 ENTRYPOINT [ "/docker-entrypoint.sh" ]

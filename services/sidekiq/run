@@ -58,7 +58,8 @@ test -f /etc/default/gitlab && . /etc/default/gitlab
 
 # Switch to the app_user if it is not he/she who is running the script.
 if [ `whoami` != "$app_user" ]; then
-  eval su - "$app_user" -c $(echo \")$shell_path -l -c \'$0 "$@"\'$(echo \"); exit;
+  exec su-exec "$app_user" $shell_path -l -c $0 $@
+  exit
 fi
 
 # Switch to the gitlab path, exit on failure.
@@ -126,7 +127,7 @@ start_gitlab() {
   if [ "$sidekiq_status" = "0" ]; then
     echo "The Sidekiq job dispatcher is already running with pid $spid, not restarting"
   else
-    exec RAILS_ENV=$RAILS_ENV bin/background_jobs start
+    RAILS_ENV=$RAILS_ENV exec bin/background_jobs start_no_deamonize
   fi
 }
 

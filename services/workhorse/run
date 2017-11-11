@@ -58,7 +58,8 @@ test -f /etc/default/gitlab && . /etc/default/gitlab
 
 # Switch to the app_user if it is not he/she who is running the script.
 if [ `whoami` != "$app_user" ]; then
-  eval su - "$app_user" -c $(echo \")$shell_path -l -c \'$0 "$@"\'$(echo \"); exit;
+  exec su-exec "$app_user" $shell_path -l -c $0 $@
+  exit
 fi
 
 # Switch to the gitlab path, exit on failure.
@@ -128,8 +129,8 @@ start_gitlab() {
     # No need to remove a socket, gitlab-workhorse does this itself.
     # Because gitlab-workhorse has multiple executables we need to fix
     # the PATH.
-    $app_root/bin/daemon_with_pidfile $gitlab_workhorse_pid_path  \
-      /usr/bin/env PATH=$gitlab_workhorse_dir:$PATH \
+    echo $$ > $gitlab_workhorse_pid_path
+    exec /usr/bin/env PATH=$gitlab_workhorse_dir:$PATH \
         gitlab-workhorse $gitlab_workhorse_options \
       >> $gitlab_workhorse_log 2>&1
   fi

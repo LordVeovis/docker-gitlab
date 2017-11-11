@@ -58,7 +58,8 @@ test -f /etc/default/gitlab && . /etc/default/gitlab
 
 # Switch to the app_user if it is not he/she who is running the script.
 if [ `whoami` != "$app_user" ]; then
-  eval su - "$app_user" -c $(echo \")$shell_path -l -c \'$0 "$@"\'$(echo \"); exit;
+  exec su-exec "$app_user" $shell_path -l -c $0 $@
+  exit
 fi
 
 # Switch to the gitlab path, exit on failure.
@@ -132,8 +133,8 @@ start_gitlab() {
     if [ "$gitaly_status" = "0" ]; then
       echo "Gitaly is already running with pid $gapid, not restarting"
     else
-      exec $app_root/bin/daemon_with_pidfile $gitaly_pid_path \
-          $gitaly_dir/gitaly $gitaly_dir/config.toml >> $gitaly_log 2>&1
+      echo $$ > $gitaly_pid_path
+      exec $gitaly_dir/gitaly $gitaly_dir/config.toml >> $gitaly_log 2>&1
     fi
   fi
 }
