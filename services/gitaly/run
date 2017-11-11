@@ -49,7 +49,7 @@ gitlab_pages_options="-pages-domain example.com -pages-root $app_root/shared/pag
 gitlab_pages_log="$app_root/log/gitlab-pages.log"
 shell_path="/bin/bash"
 gitaly_enabled=true
-gitaly_dir=$(cd $app_root/../gitaly 2> /dev/null && pwd)
+gitaly_dir=$(cd $app_root/../gitaly-ruby 2> /dev/null && pwd)
 gitaly_pid_path="$pid_path/gitaly.pid"
 gitaly_log="$app_root/log/gitaly.log"
 
@@ -134,7 +134,7 @@ start_gitlab() {
       echo "Gitaly is already running with pid $gapid, not restarting"
     else
       echo $$ > $gitaly_pid_path
-      exec $gitaly_dir/gitaly $gitaly_dir/config.toml >> $gitaly_log 2>&1
+      exec gitaly $gitaly_dir/config.toml >> $gitaly_log 2>&1
     fi
   fi
 }

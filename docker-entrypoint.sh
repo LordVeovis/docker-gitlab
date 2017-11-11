@@ -69,9 +69,9 @@ if [ -d "$conf_dir" ]; then
 
     if [ ! -f "$conf_dir"/gitaly-config.toml ]; then
         uninitialized_confdir=1
-        cp "$gitlab_home"/../gitaly/config.toml.example "$conf_dir"/gitaly-config.toml
+        cp "$gitlab_home"/../gitaly-ruby/config.toml.example "$conf_dir"/gitaly-config.toml
     fi
-    [ -L "$gitlab_home"/../gitaly/config.toml ] || ln -sf "$conf_dir"/gitaly-config.toml "$gitlab_home"/../gitaly/config.toml
+    [ -L "$gitlab_home"/../gitaly-ruby/config.toml ] || ln -sf "$conf_dir"/gitaly-config.toml "$gitlab_home"/../gitaly-ruby/config.toml
 
     if [ ! -f "$conf_dir"/nginx-gitlab ]; then
         uninitialized_confdir=1

@@ -7,8 +7,8 @@ RUN apk upgrade --no-cache && \
     apk add --no-cache bash runit nginx mariadb-client-libs openssh-server su-exec \
         git go nodejs yarn redis sudo tzdata icu-libs libre2
 
-ARG GITLAB_SOURCE=https://gitlab.com/gitlab-org/gitlab-ce.git
 ARG VERSION=v10.1.3
+ARG GITLAB_SOURCE=https://gitlab.com/gitlab-org/gitlab-ce/repository/${VERSION}/archive.tar.bz2
 ARG GITLAB_USER=git
 ARG GITLAB_HOME=/home/git/gitlab
 
@@ -19,7 +19,7 @@ RUN apk add --no-cache ruby2.3 ruby2.3-bigdecimal ruby2.3-irb ruby2.3-io-console
     install -d -o ${GITLAB_USER} -g ${GITLAB_USER} -m 755 /var/log/gitlab
 
 RUN cd /home/git && \
-    sudo -u ${GITLAB_USER} -H git clone ${GITLAB_SOURCE} -b ${VERSION} gitlab && \
+    sudo -u ${GITLAB_USER} -H wget -O - "${GITLAB_SOURCE}" | tar -xj -C "${GITLAB_HOME}" && \
     cd ${GITLAB_HOME} && \
     chown -R ${GITLAB_USER} log/ && \
     chown -R ${GITLAB_USER} tmp/ && \
@@ -46,7 +46,11 @@ RUN apk add --no-cache -t _build alpine-sdk coreutils go ruby2.3-dev zlib-dev ic
     sudo -u ${GITLAB_USER} -H bundle exec rake "gitlab:workhorse:install[/home/git/gitlab-workhorse]" RAILS_ENV=production && \
     rm -R /home/git/gitlab-workhorse/_build && \
     sudo -u ${GITLAB_USER} -H bundle exec rake "gitlab:gitaly:install[/home/git/gitaly]" RAILS_ENV=production && \
-    rm -R /home/git/gitaly/_build && \
+    mv /home/git/gitaly/ruby /home/git/gitaly-ruby && \
+    mv /home/git/gitaly/config.toml.example /home/git/gitaly-ruby/ && \
+    install /home/git/gitaly/gitaly /usr/local/bin && \
+    install /home/git/gitaly/gitaly-ssh /usr/local/bin && \
+    rm -R /home/git/gitaly && \
     apk del _build
 
 RUN cd ${GITLAB_HOME} && \
