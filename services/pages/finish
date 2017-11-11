@@ -135,7 +135,7 @@ stop_gitlab() {
 
   if [ "$gitlab_pages_status" = "0" ]; then
     echo "Shutting down gitlab-pages"
-    kill -- $(cat $gitlab_pages_pid_path)
+    kill -s TERM -- $(cat $gitlab_pages_pid_path)
   fi
 
   # If something needs to be stopped, lets wait for it to stop. Never use SIGKILL in a script.

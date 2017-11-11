@@ -130,7 +130,7 @@ stop_gitlab() {
 
   if [ "$gitlab_workhorse_status" = "0" ]; then
     echo "Shutting down GitLab Workhorse"
-    kill -- $(cat $gitlab_workhorse_pid_path)
+    kill -s TERM -- $(cat $gitlab_workhorse_pid_path)
   fi
 
   # If something needs to be stopped, lets wait for it to stop. Never use SIGKILL in a script.

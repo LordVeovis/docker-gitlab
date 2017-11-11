@@ -12,7 +12,7 @@ ARG VERSION=v10.1.3
 ARG GITLAB_USER=git
 ARG GITLAB_HOME=/home/git/gitlab
 
-RUN apk add --no-cache ruby2.3 ruby2.3-bigdecimal ruby2.3-irb ruby2.3-io-console && \
+RUN apk add --no-cache ruby2.3 ruby2.3-bigdecimal ruby2.3-irb ruby2.3-io-console ruby2.3-json && \
     gem install bundler --no-ri --no-rdoc --version 1.15.4 && \
     adduser -g Gitlab -s /bin/false -D ${GITLAB_USER} && \
     mkdir /config && \
@@ -46,6 +46,7 @@ RUN apk add --no-cache -t _build alpine-sdk coreutils go ruby2.3-dev zlib-dev ic
     sudo -u ${GITLAB_USER} -H bundle exec rake "gitlab:workhorse:install[/home/git/gitlab-workhorse]" RAILS_ENV=production && \
     rm -R /home/git/gitlab-workhorse/_build && \
     sudo -u ${GITLAB_USER} -H bundle exec rake "gitlab:gitaly:install[/home/git/gitaly]" RAILS_ENV=production && \
+    rm -R /home/git/gitaly/_build && \
     apk del _build
 
 RUN cd ${GITLAB_HOME} && \
@@ -61,9 +62,8 @@ RUN cd ${GITLAB_HOME} && \
 
 COPY docker-entrypoint.sh /
 COPY services /etc/sv
+COPY update-authorizedkeys.sh /etc/periodic/15min
 COPY kveer.rake "${GITLAB_HOME}"/lib/tasks
-
-RUN apk add --no-cache su-exec
 
 VOLUME [ "${GITLAB_HOME}/public/uploads", "${GITLAB_HOME}/builds", "${GITLAB_HOME}/shared/artifacts", "${GITLAB_HOME}/shared/public" ]
 ENTRYPOINT [ "/docker-entrypoint.sh" ]

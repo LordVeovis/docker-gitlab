@@ -38,8 +38,10 @@ if [ -d "$conf_dir" ]; then
         uninitialized_confdir=1
         sudo -u git -H bundle exec rake gitlab:shell:generate_secrets RAILS_ENV=production
         mv "$gitlab_home"/config/secrets.yml "$conf_dir"/
+        mv "$gitlab_home"/.gitlab_shell_secret "$conf_dir"/gitlab_shell_secret
     fi
     [ -L "$gitlab_home"/config/secrets.yml ] || ln -fs "$conf_dir"/secrets.yml "$gitlab_home"/config/secrets.yml
+    [ -L "$gitlab_home"/.gitlab_shell_secret ] || ln -fs "$conf_dir"/gitlab_shell_secret "$gitlab_home"/.gitlab_shell_secret
 
     if [ ! -f "$conf_dir"/unicorn.rb ]; then
         uninitialized_confdir=1
@@ -71,6 +73,12 @@ if [ -d "$conf_dir" ]; then
     fi
     [ -L "$gitlab_home"/../gitaly/config.toml ] || ln -sf "$conf_dir"/gitaly-config.toml "$gitlab_home"/../gitaly/config.toml
 
+    if [ ! -f "$conf_dir"/nginx-gitlab ]; then
+        uninitialized_confdir=1
+        cp "$gitlab_home"/lib/support/nginx/gitlab "$conf_dir"/nginx-gitlab
+    fi
+    [ -L /etc/nginx/conf.d/gitlab ] || ln -sf "$conf_dir"/nginx-gitlab /etc/nginx/conf.d/gitlab
+
     if [ $uninitialized_confdir == 1 ]; then
         echo "Gitlab has not been configured. Please configure it now before restarting again the container."
         return 0
@@ -83,6 +91,15 @@ if [ -d "$conf_dir" ]; then
     fi
     cp -d /config/ssh/ssh_host_* /etc/ssh/
     chmod 400 /etc/ssh/ssh_host_*
+
+    if [ -f "$conf_dir"/authorized_keys ];
+        install -o git -g git -m 600 "$conf_dir"/authorized_keys "$gitlab_home"/../.ssh/authorized_keys
+    fi
 fi
+
+[ "$AUTO_UPDATE" == '1' ] && sudo -u git -H bundle exec rake db:migrate RAILS_ENV=production
+
+# print environemental informations
+sudo -u git -H bundle exec rake gitlab:env:info RAILS_ENV=production
 
 exec $@

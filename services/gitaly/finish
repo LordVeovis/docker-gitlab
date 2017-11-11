@@ -134,7 +134,7 @@ stop_gitlab() {
 
   if [ "$gitaly_status" = "0" ]; then
     echo "Shutting down Gitaly"
-    kill -- $(cat $gitaly_pid_path)
+    kill -s TERM -- $(cat $gitaly_pid_path)
   fi
 
   # If something needs to be stopped, lets wait for it to stop. Never use SIGKILL in a script.
