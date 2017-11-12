@@ -92,9 +92,8 @@ if [ -d "$conf_dir" ]; then
     cp -d /config/ssh/ssh_host_* /etc/ssh/
     chmod 400 /etc/ssh/ssh_host_*
 
-    if [ -f "$conf_dir"/authorized_keys ];
-        install -o git -g git -m 600 "$conf_dir"/authorized_keys "$gitlab_home"/../.ssh/authorized_keys
-    fi
+    [ -f "$conf_dir"/authorized_keys ] || touch "$conf_dir"/authorized_keys
+    [ -L "$gitlab_home"/../.ssh/authorized_keys ] || mkdir -p "$gitlab_home"/../.ssh && ln -sf "$conf_dir"/authorized_keys "$gitlab_home"/../.ssh/authorized_keys
 fi
 
 [ "$AUTO_UPDATE" == '1' ] && sudo -u git -H bundle exec rake db:migrate RAILS_ENV=production

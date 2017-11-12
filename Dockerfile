@@ -69,7 +69,6 @@ RUN cd ${GITLAB_HOME} && \
 
 COPY docker-entrypoint.sh /
 COPY services /etc/sv
-COPY update-authorizedkeys.sh /etc/periodic/15min
 COPY kveer.rake "${GITLAB_HOME}"/lib/tasks
 
 VOLUME [ "${GITLAB_HOME}/public/uploads", "${GITLAB_HOME}/builds", "${GITLAB_HOME}/shared/artifacts", "${GITLAB_HOME}/shared/public" ]
