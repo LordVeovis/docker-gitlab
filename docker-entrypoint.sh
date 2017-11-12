@@ -77,7 +77,7 @@ if [ -d "$conf_dir" ]; then
         uninitialized_confdir=1
         cp "$gitlab_home"/lib/support/nginx/gitlab "$conf_dir"/nginx-gitlab
     fi
-    [ -L /etc/nginx/conf.d/gitlab ] || ln -sf "$conf_dir"/nginx-gitlab /etc/nginx/conf.d/gitlab
+    [ -L /etc/nginx/conf.d/gitlab.conf ] || ln -sf "$conf_dir"/nginx-gitlab /etc/nginx/conf.d/gitlab.conf
 
     if [ $uninitialized_confdir == 1 ]; then
         echo "Gitlab has not been configured. Please configure it now before restarting again the container."
