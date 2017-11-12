@@ -123,7 +123,7 @@ check_stale_pids(){
 ## If no parts of the service is running, bail out.
 exit_if_not_running(){
   check_stale_pids
-  if { [ "$gitlab_pages_enabled" != true ] || [ "$gitlab_pages_status" != "0" ]; }; then
+  if { [ "$gitlab_pages_enabled" == true ] && [ "$gitlab_pages_status" != "0" ]; }; then
     echo "GitLab is not running."
     exit
   fi
