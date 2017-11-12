@@ -4,7 +4,7 @@ COPY veovis-59b4837b.rsa.pub /etc/apk/keys/
 
 RUN apk upgrade --no-cache && \
     echo -e 'http://alpine.kveer.fr/3.6/main\nhttp://alpine.kveer.fr/3.6/kveer' >> /etc/apk/repositories && \
-    apk add --no-cache bash runit nginx mariadb-client-libs openssh-server su-exec \
+    apk add --no-cache bash runit nginx mariadb-client-libs openssh-server openssl su-exec \
         git go nodejs yarn redis sudo tzdata icu-libs libre2
 
 ARG VERSION=v10.1.3
@@ -19,7 +19,8 @@ RUN apk add --no-cache ruby2.3 ruby2.3-bigdecimal ruby2.3-irb ruby2.3-io-console
     install -d -o ${GITLAB_USER} -g ${GITLAB_USER} -m 755 /var/log/gitlab
 
 RUN cd /home/git && \
-    sudo -u ${GITLAB_USER} -H wget -O - "${GITLAB_SOURCE}" | tar -xj -C "${GITLAB_HOME}" && \
+    sudo -u ${GITLAB_USER} -H wget -O - "${GITLAB_SOURCE}" | sudo -u ${GITLAB_USER} -H tar -xj -C . && \
+    mv gitlab-* gitlab && \
     cd ${GITLAB_HOME} && \
     chown -R ${GITLAB_USER} log/ && \
     chown -R ${GITLAB_USER} tmp/ && \
@@ -63,7 +64,8 @@ RUN cd ${GITLAB_HOME} && \
     sudo -u ${GITLAB_USER} -H bundle exec rake gitlab:assets:compile RAILS_ENV=production NODE_ENV=production && \
     rm ${GITLAB_HOME}/config/secrets.yml && \
     rm ${GITLAB_HOME}/config/database.yml && \
-    rm ${GITLAB_HOME}/config/gitlab.yml
+    rm ${GITLAB_HOME}/config/gitlab.yml && \
+    echo 'export RUBYOPT=--disable-gems' > /etc/profile.d/ruby-disable-gems
 
 COPY docker-entrypoint.sh /
 COPY services /etc/sv
