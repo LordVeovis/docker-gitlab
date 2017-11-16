@@ -7,7 +7,7 @@ RUN apk upgrade --no-cache && \
     apk add --no-cache bash runit nginx mariadb-client-libs openssh-server openssl su-exec \
         git go nodejs yarn redis sudo tzdata icu-libs libre2
 
-ARG VERSION=v10.1.3
+ARG VERSION=v10.1.4
 ARG GITLAB_SOURCE=https://gitlab.com/gitlab-org/gitlab-ce/repository/${VERSION}/archive.tar.bz2
 ARG GITLAB_USER=git
 ARG GITLAB_HOME=/home/git/gitlab
@@ -67,8 +67,8 @@ RUN cd ${GITLAB_HOME} && \
     rm ${GITLAB_HOME}/config/gitlab.yml && \
     echo 'export RUBYOPT=--disable-gems' > /etc/profile.d/ruby-disable-gems &&\
     sed -i 's!/home/git/gitaly/ruby!/home/git/gitaly-ruby!' /home/git/gitaly-ruby/config.toml.example && \
-    sed -i 's!gitaly/ruby!gitaly-ruby!' /etc/default/gitlab && \
-    sed -i 's!^\(gitlab_workhorse_dir=\)!# \1!' /etc/sv/workhorse/run /etc/sv/workhorse/finish /etc/default/gitlab && \
+    sed -i 's!gitaly/ruby!gitaly-ruby!' "${GITLAB_HOME}"/lib/support/init.d/gitlab.default.example && \
+    sed -i 's!^\(gitlab_workhorse_dir=\)!# \1!' /etc/sv/workhorse/run /etc/sv/workhorse/finish "${GITLAB_HOME}"/lib/support/init.d/gitlab.default.example && \
     sed -i 's!\(server_name \)[^;]!\1 _!' ${GITLAB_HOME}/lib/support/nginx/gitlab
 
 COPY docker-entrypoint.sh /
