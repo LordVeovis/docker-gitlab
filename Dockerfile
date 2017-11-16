@@ -68,7 +68,7 @@ RUN cd ${GITLAB_HOME} && \
     echo 'export RUBYOPT=--disable-gems' > /etc/profile.d/ruby-disable-gems &&\
     sed -i 's!/home/git/gitaly/ruby!/home/git/gitaly-ruby!' /home/git/gitaly-ruby/config.toml.example && \
     sed -i 's!gitaly/ruby!gitaly-ruby!' "${GITLAB_HOME}"/lib/support/init.d/gitlab.default.example && \
-    sed -i 's!^\(gitlab_workhorse_dir=\)!# \1!' /etc/sv/workhorse/run /etc/sv/workhorse/finish "${GITLAB_HOME}"/lib/support/init.d/gitlab.default.example && \
+    sed -i 's!^\(gitlab_workhorse_dir=\)!# \1!' "${GITLAB_HOME}"/lib/support/init.d/gitlab.default.example && \
     sed -i 's!\(server_name \)[^;]!\1 _!' ${GITLAB_HOME}/lib/support/nginx/gitlab
 
 COPY docker-entrypoint.sh /
