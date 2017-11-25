@@ -4,10 +4,10 @@ COPY veovis-59b4837b.rsa.pub /etc/apk/keys/
 
 RUN apk upgrade --no-cache && \
     echo -e 'http://alpine.kveer.fr/3.6/main\nhttp://alpine.kveer.fr/3.6/kveer' >> /etc/apk/repositories && \
-    apk add --no-cache bash runit nginx mariadb-client-libs openssh-server openssl su-exec \
+    apk add --no-cache bash runit nginx mariadb-client-libs openssh-server libressl su-exec \
         git go nodejs yarn redis sudo tzdata icu-libs libre2
 
-ARG VERSION=v10.1.3
+ARG VERSION=v10.2.2
 ARG GITLAB_SOURCE=https://gitlab.com/gitlab-org/gitlab-ce/repository/${VERSION}/archive.tar.bz2
 ARG GITLAB_USER=git
 ARG GITLAB_HOME=/home/git/gitlab
