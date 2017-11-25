@@ -98,7 +98,7 @@ fi
 
 [ "$AUTO_UPDATE" == '1' ] && sudo -u git -H bundle exec rake db:migrate RAILS_ENV=production
 
-# print environemental informations
+# print environmental informations
 sudo -u git -H bundle exec rake gitlab:env:info RAILS_ENV=production
 
 exec $@
