@@ -3,27 +3,38 @@
 # About
 
 This is a docker container for Gitlab build around Alpine Linux for compacity as an alternative to the fat official Omnibus package.
-WIP: documentation incoming...
 
 # Technical stack
 
-* Alpine 3.6
+* alpine 3.6
 * nginx 1.12
-* Ruby 2.3.5
+* ruby 2.3.5
 * git 2.13.5
 * go 1.8.4
 * dillon's cron 4.5
 
-* Gitlab 10.1.3
+* Gitlab 10.2.2
 * gitlab Shell 5.9.3
 * sidekiq 5.0.4
 
-# Parameters
+# Configuration
+
+The first time the container is launched, it initialize the /config directory, then stop itself to let you review all settings according to your environment. This directory *MUST* be mapped to keep the same configuration of your gitlab environment, including the generated secrets, through the updates.
 
 ## Environment variables
-* TIMEZONE: the timezone
+
+* TIMEZONE: the desired timezone. Example: Europe/Paris
+* GITLAB_ROOT_PASSWORD: password of the first gitlab user if it does not exists. This parameter is only used the first time the database is initialized.
+* GITLAB_HOST: the schema and hostname where the website can be reachable. Example: https://gitlab.kveer.fr
+* RAILS_ENV: production
+* DATABASE_URL: connection string to the database. For now, only mysql is supported. Example: mysql2://gitlab_user:gitlab_pwd@mysql/gitlab
+* GITLAB_EMAIL_FROM: Gitlab will sent email with this email as a sender. Example: gitlab@kveer.fr
+* GITLAB_EMAIL_DISPLAY_NAME: The display name of the sender. Example: Gitlab Kveer
+* GITLAB_EMAIL_SUBJECT_PREFIX: The object prefix for generated emails. Example: "[gitlab]"
+* GITLAB_UNICORN_MEMORY_MAX: The maximum amount of ram unicorn can use. Example: 128M
 
 ## Volumes
 
-# Initial setup
+* /config: contains all configuration of gitlab
+
 
