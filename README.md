@@ -13,13 +13,13 @@ This is a docker container for Gitlab build around Alpine Linux for compacity as
 * go 1.8.4
 * dillon's cron 4.5
 
-* Gitlab 10.2.2
+* Gitlab 10.2.4
 * gitlab Shell 5.9.3
 * sidekiq 5.0.4
 
 # Configuration
 
-The first time the container is launched, it initialize the /config directory, then stop itself to let you review all settings according to your environment. This directory *MUST* be mapped to keep the same configuration of your gitlab environment, including the generated secrets, through the updates.
+The first time the container is launched, it initializes the /config directory, then stops itself to let you review all settings according to your environment. This directory *MUST* be mapped to keep the same configuration of your gitlab environment, including the generated secrets, through the updates.
 
 ## Environment variables
 

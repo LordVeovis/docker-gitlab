@@ -1,22 +1,22 @@
-FROM alpine:3.6
-
-COPY veovis-59b4837b.rsa.pub /etc/apk/keys/
+FROM alpine:3.7
 
 RUN apk upgrade --no-cache && \
-    echo -e 'http://alpine.kveer.fr/3.6/main\nhttp://alpine.kveer.fr/3.6/kveer' >> /etc/apk/repositories && \
     apk add --no-cache bash runit nginx mariadb-client-libs openssh-server libressl su-exec \
         git go nodejs yarn redis sudo tzdata icu-libs libre2
 
-ARG VERSION=v10.2.2
-ARG GITLAB_SOURCE=https://gitlab.com/gitlab-org/gitlab-ce/repository/${VERSION}/archive.tar.bz2
+COPY veovis-59b4837b.rsa.pub /etc/apk/keys/
 ARG GITLAB_USER=git
-ARG GITLAB_HOME=/home/git/gitlab
 
-RUN apk add --no-cache ruby2.3 ruby2.3-bigdecimal ruby2.3-irb ruby2.3-io-console ruby2.3-json && \
+RUN echo -e 'http://alpine.kveer.fr/3.7/main\nhttp://alpine.kveer.fr/3.7/kveer' >> /etc/apk/repositories && \
+    apk add --no-cache ruby2.3 ruby2.3-bigdecimal ruby2.3-irb ruby2.3-io-console ruby2.3-json && \
     gem install bundler --no-ri --no-rdoc --version 1.15.4 && \
     adduser -g Gitlab -s /bin/false -D ${GITLAB_USER} && \
     mkdir /config && \
     install -d -o ${GITLAB_USER} -g ${GITLAB_USER} -m 755 /var/log/gitlab
+
+ARG VERSION=v10.2.4
+ARG GITLAB_SOURCE=https://gitlab.com/gitlab-org/gitlab-ce/repository/${VERSION}/archive.tar.bz2
+ARG GITLAB_HOME=/home/git/gitlab
 
 RUN cd /home/git && \
     sudo -u ${GITLAB_USER} -H wget -O - "${GITLAB_SOURCE}" | sudo -u ${GITLAB_USER} -H tar -xj -C . && \
