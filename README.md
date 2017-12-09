@@ -6,7 +6,7 @@ This is a docker container for Gitlab build around Alpine Linux for compacity as
 
 # Technical stack
 
-* alpine 3.6
+* alpine 3.7
 * nginx 1.12
 * ruby 2.3.5
 * git 2.13.5

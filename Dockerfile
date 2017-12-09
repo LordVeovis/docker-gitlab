@@ -8,7 +8,7 @@ COPY veovis-59b4837b.rsa.pub /etc/apk/keys/
 ARG GITLAB_USER=git
 
 RUN echo -e 'http://alpine.kveer.fr/3.7/main\nhttp://alpine.kveer.fr/3.7/kveer' >> /etc/apk/repositories && \
-    apk add --no-cache ruby2.3 ruby2.3-bigdecimal ruby2.3-irb ruby2.3-io-console ruby2.3-json && \
+    apk add --no-cache ruby2.3 ruby2.3-bigdecimal ruby2.3-irb ruby2.3-io-console ruby2.3-json =gitlab-workhorse-3.3.1 && \
     gem install bundler --no-ri --no-rdoc --version 1.15.4 && \
     adduser -g Gitlab -s /bin/false -D ${GITLAB_USER} && \
     mkdir /config && \
@@ -44,9 +44,6 @@ RUN apk add --no-cache -t _build alpine-sdk coreutils go ruby2.3-dev zlib-dev ic
     cp config/gitlab.yml.example config/gitlab.yml && \
     sudo -u ${GITLAB_USER} -H bundle exec rake gitlab:shell:install REDIS_URL=unix:/var/run/redis/redis.sock RAILS_ENV=production SKIP_STORAGE_VALIDATION=true && \
     rm -R /home/git/gitlab-shell/go /home/git/gitlab-shell/go_build && \
-    sudo -u ${GITLAB_USER} -H bundle exec rake "gitlab:workhorse:install[/home/git/gitlab-workhorse]" RAILS_ENV=production && \
-    install /home/git/gitlab-workhorse/gitlab-* /usr/local/bin/ && \
-    rm -R /home/git/gitlab-workhorse/ && \
     sudo -u ${GITLAB_USER} -H bundle exec rake "gitlab:gitaly:install[/home/git/gitaly]" RAILS_ENV=production && \
     mv /home/git/gitaly/ruby /home/git/gitaly-ruby && \
     mv /home/git/gitaly/config.toml.example /home/git/gitaly-ruby/ && \
