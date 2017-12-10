@@ -9,12 +9,15 @@ This is a docker container for Gitlab build around Alpine Linux for compacity as
 * alpine 3.7
 * nginx 1.12
 * ruby 2.3.5
-* git 2.13.5
-* go 1.8.4
+* git 2.15.0
+* go 1.9.2
 * dillon's cron 4.5
 
 * Gitlab 10.2.4
-* gitlab Shell 5.9.3
+* gitaly 0.52.1
+* gitlab pages 0.6.0
+* gitlab Shell 5.9.4
+* gitlab workhorse 3.3.1
 * sidekiq 5.0.4
 
 # Configuration
