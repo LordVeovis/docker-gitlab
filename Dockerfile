@@ -2,7 +2,7 @@ FROM alpine:3.7
 
 RUN apk upgrade --no-cache && \
     apk add --no-cache bash runit nginx mariadb-client-libs openssh-server libressl su-exec \
-        git redis sudo tzdata icu-libs libre2
+        git redis nodejs sudo tzdata icu-libs libre2
 
 COPY veovis-59b4837b.rsa.pub /etc/apk/keys/
 ARG GITLAB_USER=git
@@ -39,7 +39,7 @@ RUN cd /home/git && \
     sudo -u ${GITLAB_USER} -H git config --global gc.auto 0 && \
     sudo -u ${GITLAB_USER} -H git config --global repack.writeBitmaps true
 
-RUN apk add --no-cache -t _build alpine-sdk coreutils go nodejs ruby2.3-dev zlib-dev icu-dev libffi-dev cmake mariadb-dev linux-headers libre2-dev && \
+RUN apk add --no-cache -t _build alpine-sdk coreutils go ruby2.3-dev zlib-dev icu-dev libffi-dev cmake mariadb-dev linux-headers libre2-dev && \
     cd ${GITLAB_HOME} && \
     sudo -u ${GITLAB_USER} -H BUNDLE_FORCE_RUBY_PLATFORM=1 bundle install --deployment --without development test postgres aws kerberos && \
     cp config/database.yml.mysql config/database.yml && \
@@ -48,7 +48,7 @@ RUN apk add --no-cache -t _build alpine-sdk coreutils go nodejs ruby2.3-dev zlib
     rm -R /home/git/gitlab-shell/go /home/git/gitlab-shell/go_build && \
     apk del _build
 
-RUN apk add --no-cache -t _build nodejs yarn && \
+RUN apk add --no-cache -t _build yarn && \
     cd ${GITLAB_HOME} && \
     chmod 0700 ${GITLAB_HOME}/tmp/sockets/private && \
     chown ${GITLAB_USER} ${GITLAB_HOME}/tmp/sockets/private && \
