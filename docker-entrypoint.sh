@@ -6,6 +6,10 @@ if [ "x$TIMEZONE" != 'x' -a -f /usr/share/zoneinfo/"$TIMEZONE" ]; then
     echo "$TIMEZONE" >> /etc/timezone
 fi
 
+# disabling MPROTECT on grsec kernels
+# https://github.com/moby/moby/issues/35699
+[ -d /proc/sys/kernel/pax/ ] && paxmark -m /usr/bin/ruby
+
 conf_dir=/config
 gitlab_home=/home/git/gitlab
 

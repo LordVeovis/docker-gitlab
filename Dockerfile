@@ -2,7 +2,7 @@ FROM alpine:3.7
 
 RUN apk upgrade --no-cache && \
     apk add --no-cache bash runit nginx mariadb-client-libs openssh-server libressl su-exec \
-        git redis nodejs sudo tzdata icu-libs libre2
+        git redis nodejs sudo tzdata icu-libs libre2 paxmark
 
 COPY veovis-59b4837b.rsa.pub /etc/apk/keys/
 ARG GITLAB_USER=git
