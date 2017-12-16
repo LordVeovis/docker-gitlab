@@ -8,6 +8,11 @@ if [ "x$TIMEZONE" != 'x' -a -f /usr/share/zoneinfo/"$TIMEZONE" ]; then
     echo "$TIMEZONE" >> /etc/timezone
 fi
 
+if [ -z "$RAILS_ENV" ]; then
+    echo 'The RAILS_ENV environment variable is not set'
+    return 1
+fi
+
 # disabling MPROTECT on grsec kernels
 # https://github.com/moby/moby/issues/35699
 [ -d /proc/sys/kernel/pax/ ] && paxmark -m /usr/bin/ruby
@@ -42,7 +47,7 @@ if [ -d "$conf_dir" ]; then
 
     if [ ! -f "$conf_dir"/secrets.yml ]; then
         uninitialized_confdir=1
-        sudo -u git -H bundle exec rake gitlab:shell:generate_secrets RAILS_ENV=production
+        sudo -u git -H bundle exec rake gitlab:shell:generate_secrets RAILS_ENV=$RAILS_ENV
         mv "$gitlab_home"/config/secrets.yml.example "$conf_dir"/secrets.yml
         mv "$gitlab_home"/.gitlab_shell_secret "$conf_dir"/gitlab_shell_secret
     fi
@@ -102,9 +107,9 @@ if [ -d "$conf_dir" ]; then
     [ -L "$gitlab_home"/../.ssh/authorized_keys ] || mkdir -p "$gitlab_home"/../.ssh && ln -sf "$conf_dir"/authorized_keys "$gitlab_home"/../.ssh/authorized_keys
 fi
 
-[ "$AUTO_UPDATE" == '1' ] && sudo -u git -H bundle exec rake db:migrate RAILS_ENV=production
+[ "$AUTO_UPDATE" == '1' ] && sudo -u git -H bundle exec rake db:migrate RAILS_ENV=$RAILS_ENV
 
 # print environmental informations
-sudo -u git -H bundle exec rake gitlab:env:info RAILS_ENV=production
+sudo -u git -H bundle exec rake gitlab:env:info RAILS_ENV=$RAILS_ENV
 
 exec $@
