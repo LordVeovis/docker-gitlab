@@ -1,5 +1,7 @@
 #!/bin/sh
 
+set -e
+
 # setting the timezone
 if [ "x$TIMEZONE" != 'x' -a -f /usr/share/zoneinfo/"$TIMEZONE" ]; then
     cp /usr/share/zoneinfo/$TIMEZONE /etc/localtime
