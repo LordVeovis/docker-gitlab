@@ -41,7 +41,7 @@ if [ -d "$conf_dir" ]; then
     if [ ! -f "$conf_dir"/secrets.yml ]; then
         uninitialized_confdir=1
         sudo -u git -H bundle exec rake gitlab:shell:generate_secrets RAILS_ENV=production
-        mv "$gitlab_home"/config/secrets.yml.example "$conf_dir"/
+        mv "$gitlab_home"/config/secrets.yml.example "$conf_dir"/secrets.yml
         mv "$gitlab_home"/.gitlab_shell_secret "$conf_dir"/gitlab_shell_secret
     fi
     [ -L "$gitlab_home"/config/secrets.yml ] || ln -fs "$conf_dir"/secrets.yml "$gitlab_home"/config/secrets.yml
