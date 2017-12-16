@@ -65,6 +65,10 @@ RUN apk add --no-cache -t _build yarn && \
     sed -i 's!^\(gitlab_workhorse_dir=\)!# \1!' "${GITLAB_HOME}"/lib/support/init.d/gitlab.default.example && \
     sed -i 's!\(server_name \)[^;]!\1 _!' ${GITLAB_HOME}/lib/support/nginx/gitlab
 
+RUN rm /etc/nginx/conf.d/default.conf && \
+    sed -i 's!^\(dir = \).*gitaly.*ruby.*!\1 "/usr/lib/gitlab/gitaly-ruby/"!' /etc/gitlab/gitaly/config.toml.example && \
+    sed -i 's!^\(gitaly_dir=\).*!\1/config!' "${GITLAB_HOME}"/lib/support/init.d/gitlab.default.example
+
 COPY docker-entrypoint.sh /
 COPY services /etc/sv
 COPY kveer.rake "${GITLAB_HOME}"/lib/tasks
