@@ -52,7 +52,7 @@ if [ -d "$conf_dir" ]; then
         [ -f "$gitlab_shell"/.gitlab_shell_secret ] && rm "$gitlab_shell"/.gitlab_shell_secret
         touch "$conf_dir"/gitlab_shell_secret
         chown git "$conf_dir"/gitlab_shell_secret
-        
+
         sudo -u git -H bundle exec rake gitlab:shell:generate_secrets RAILS_ENV=$RAILS_ENV
         mv "$gitlab_home"/config/secrets.yml.example "$conf_dir"/secrets.yml
     fi
@@ -107,7 +107,7 @@ if [ -d "$conf_dir" ]; then
     cp -d /config/ssh/ssh_host_* /etc/ssh/
     chmod 400 /etc/ssh/ssh_host_*
 
-    [ -f "$conf_dir"/authorized_keys ] || touch "$conf_dir"/authorized_keys
+    [ -f "$conf_dir"/authorized_keys ] || touch "$conf_dir"/authorized_keys && chmod git:git "$conf_dir"/authorized_keys
     [ -L "$gitlab_home"/../.ssh/authorized_keys ] || mkdir -p "$gitlab_home"/../.ssh && ln -sf "$conf_dir"/authorized_keys "$gitlab_home"/../.ssh/authorized_keys
 fi
 
