@@ -19,6 +19,7 @@ fi
 
 conf_dir=/config
 gitlab_home=/home/git/gitlab
+gitlab_shell="$gitlab_home"/../gitlab-shell
 
 [ ! -d /etc/default ] && mkdir /etc/default
 
@@ -45,14 +46,17 @@ if [ -d "$conf_dir" ]; then
     fi
     [ -L "$gitlab_home"/config/gitlab.yml ] || ln -sf "$conf_dir"/gitlab.yml "$gitlab_home"/config/gitlab.yml
 
-    if [ ! -f "$conf_dir"/secrets.yml ]; then
+    if [ ! -f "$conf_dir"/secrets.yml ] || [ ! -f "$conf_dir"/gitlab_shell_secret ]; then
         uninitialized_confdir=1
+
+        [ -f "$gitlab_shell"/.gitlab_shell_secret ] && rm "$gitlab_shell"/.gitlab_shell_secret
+        touch "$conf_dir"/gitlab_shell_secret
+        chown git "$conf_dir"/gitlab_shell_secret
+        
         sudo -u git -H bundle exec rake gitlab:shell:generate_secrets RAILS_ENV=$RAILS_ENV
         mv "$gitlab_home"/config/secrets.yml.example "$conf_dir"/secrets.yml
-        mv "$gitlab_home"/.gitlab_shell_secret "$conf_dir"/gitlab_shell_secret
     fi
     [ -L "$gitlab_home"/config/secrets.yml ] || ln -fs "$conf_dir"/secrets.yml "$gitlab_home"/config/secrets.yml
-    [ -L "$gitlab_home"/.gitlab_shell_secret ] || ln -fs "$conf_dir"/gitlab_shell_secret "$gitlab_home"/.gitlab_shell_secret
 
     if [ ! -f "$conf_dir"/unicorn.rb ]; then
         uninitialized_confdir=1

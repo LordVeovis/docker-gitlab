@@ -57,9 +57,9 @@ RUN apk add --no-cache -t _build yarn && \
     sudo -u ${GITLAB_USER} -H yarn install --production --pure-lockfile && \
     sudo -u ${GITLAB_USER} -H bundle exec rake gitlab:assets:compile RAILS_ENV=production NODE_ENV=production && \
     apk del _build && \
-    rm ${GITLAB_HOME}/config/secrets.yml && \
-    rm ${GITLAB_HOME}/config/database.yml && \
-    rm ${GITLAB_HOME}/config/gitlab.yml && \
+    rm "${GITLAB_HOME}"/config/secrets.yml && \
+    rm "${GITLAB_HOME}"/config/database.yml && \
+    rm "${GITLAB_HOME}"/config/gitlab.yml && \
     echo 'export RUBYOPT=--disable-gems' > /etc/profile.d/ruby-disable-gems &&\
     sed -i 's!gitaly/ruby!gitaly-ruby!' "${GITLAB_HOME}"/lib/support/init.d/gitlab.default.example && \
     sed -i 's!^\(gitlab_workhorse_dir=\)!# \1!' "${GITLAB_HOME}"/lib/support/init.d/gitlab.default.example && \
@@ -67,7 +67,9 @@ RUN apk add --no-cache -t _build yarn && \
 
 RUN rm /etc/nginx/conf.d/default.conf && \
     sed -i 's!^\(dir = \).*gitaly.*ruby.*!\1 "/usr/lib/gitlab/gitaly-ruby/"!' /etc/gitlab/gitaly/config.toml.example && \
-    sed -i 's!^\(gitaly_dir=\).*!\1/config!' "${GITLAB_HOME}"/lib/support/init.d/gitlab.default.example
+    sed -i 's!^\(gitaly_dir=\).*!\1/config!' "${GITLAB_HOME}"/lib/support/init.d/gitlab.default.example && \
+    sed -i 's!\(client_path:\) .*gitaly/bin.*!\1 /usr/bin!' "${GITLAB_HOME}"/config/gitlab.yml.example && \
+    sed -i 's!\(secret_file:\) .*gitlab_shell_secret.*!\1 /config/gitlab_shell_secret!' "${GITLAB_HOME}"/config/gitlab.yml.example
 
 COPY docker-entrypoint.sh /
 COPY services /etc/sv
