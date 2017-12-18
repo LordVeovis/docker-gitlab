@@ -14,7 +14,7 @@ RUN echo -e 'http://alpine.kveer.fr/3.7/main\nhttp://alpine.kveer.fr/3.7/kveer' 
     mkdir /config && \
     install -d -o ${GITLAB_USER} -g ${GITLAB_USER} -m 755 /var/log/gitlab
 
-ARG GITLAB_VERSION=v10.2.4
+ARG GITLAB_VERSION=v10.2.5
 ARG WORKHORSE_VERSION=3.3.1-r0
 ARG GITALY_VERSION=0.52.1-r1
 ARG GITLAB_SOURCE=https://gitlab.com/gitlab-org/gitlab-ce/repository/${GITLAB_VERSION}/archive.tar.bz2
