@@ -16,7 +16,7 @@ This is a docker container for Gitlab build around Alpine Linux for compacity as
 * Gitlab 10.2.4
 * gitaly 0.52.1
 * gitlab pages 0.6.0
-* gitlab Shell 5.9.4
+* gitlab Shell 5.10.0
 * gitlab workhorse 3.3.1
 * sidekiq 5.0.4
 

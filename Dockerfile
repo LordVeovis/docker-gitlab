@@ -16,7 +16,7 @@ RUN echo -e 'http://alpine.kveer.fr/3.7/main\nhttp://alpine.kveer.fr/3.7/kveer' 
 
 ARG GITLAB_VERSION=v10.2.5
 ARG WORKHORSE_VERSION=3.3.1-r0
-ARG GITLAB_SHELL=5.10.0
+ARG GITLAB_SHELL=5.10.0-r0
 ARG GITALY_VERSION=0.52.1-r1
 ARG GITLAB_SOURCE=https://gitlab.com/gitlab-org/gitlab-ce/repository/${GITLAB_VERSION}/archive.tar.bz2
 ARG GITLAB_HOME=/home/git/gitlab
