@@ -16,11 +16,12 @@ RUN echo -e 'http://alpine.kveer.fr/3.7/main\nhttp://alpine.kveer.fr/3.7/kveer' 
 
 ARG GITLAB_VERSION=v10.2.5
 ARG WORKHORSE_VERSION=3.3.1-r0
+ARG GITLAB_SHELL=5.10.0
 ARG GITALY_VERSION=0.52.1-r1
 ARG GITLAB_SOURCE=https://gitlab.com/gitlab-org/gitlab-ce/repository/${GITLAB_VERSION}/archive.tar.bz2
 ARG GITLAB_HOME=/home/git/gitlab
 
-RUN apk add --no-cache gitlab-workhorse=${WORKHORSE_VERSION} gitaly=${GITALY_VERSION}
+RUN apk add --no-cache gitlab-workhorse=${WORKHORSE_VERSION} gitaly=${GITALY_VERSION} gitlab-shell=${GITLAB_SHELL}
 
 RUN cd /home/git && \
     sudo -u ${GITLAB_USER} -H wget -O - "${GITLAB_SOURCE}" | sudo -u ${GITLAB_USER} -H tar -xj -C . && \
@@ -44,8 +45,6 @@ RUN apk add --no-cache -t _build alpine-sdk coreutils go ruby2.3-dev zlib-dev ic
     sudo -u ${GITLAB_USER} -H BUNDLE_FORCE_RUBY_PLATFORM=1 bundle install --deployment --without development test postgres aws kerberos && \
     cp config/database.yml.mysql config/database.yml && \
     cp config/gitlab.yml.example config/gitlab.yml && \
-    sudo -u ${GITLAB_USER} -H bundle exec rake gitlab:shell:install REDIS_URL=unix:/var/run/redis/redis.sock RAILS_ENV=production SKIP_STORAGE_VALIDATION=true && \
-    rm -R /home/git/gitlab-shell/go /home/git/gitlab-shell/go_build && \
     apk del _build
 
 RUN apk add --no-cache -t _build yarn && \
@@ -71,7 +70,7 @@ RUN rm /etc/nginx/conf.d/default.conf && \
     sed -i 's!^\(gitaly_dir=\).*!\1/config!' "${GITLAB_HOME}"/lib/support/init.d/gitlab.default.example && \
     sed -i 's!\(client_path:\) .*gitaly/bin.*!\1 /usr/bin!' "${GITLAB_HOME}"/config/gitlab.yml.example && \
     sed -i 's!\(secret_file:\) .*gitlab_shell_secret.*!\1 /config/gitlab_shell_secret!' "${GITLAB_HOME}"/config/gitlab.yml.example && \
-    sed -i 's!^\(secret_file:\).*!\1 /config/gitlab_shell_secret!' "${GITLAB_HOME}"/../gitlab-shell/config.yml.example
+    sed -i 's!\([a-z_]:\) /home/git/gitlab-shell/\(.*\)$!\1 /usr/lib/gitlab/shell/\2!' "${GITLAB_HOME}"/config/gitlab.yml.example
 
 COPY docker-entrypoint.sh /
 COPY services /etc/sv

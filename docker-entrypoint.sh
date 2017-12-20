@@ -19,7 +19,7 @@ fi
 
 conf_dir=/config
 gitlab_home=/home/git/gitlab
-gitlab_shell="$gitlab_home"/../gitlab-shell
+gitlab_shell=/usr/lib/gitlab/shell
 
 [ ! -d /etc/default ] && mkdir /etc/default
 
@@ -78,9 +78,9 @@ if [ -d "$conf_dir" ]; then
 
     if [ ! -f "$conf_dir"/gitlab-shell-config.yml ]; then
         uninitialized_confdir=1
-        cp "$gitlab_home"/../gitlab-shell/config.yml.example "$conf_dir"/gitlab-shell-config.yml
+        cp /etc/gitlab/config.yml.example "$conf_dir"/gitlab-shell-config.yml
     fi
-    [ -L "$gitlab_home"/../gitlab-shell/config.yml ] || ln -sf "$conf_dir"/gitlab-shell-config.yml "$gitlab_home"/../gitlab-shell/config.yml
+    [ -L "$gitlab_shell"/config.yml ] || ln -sf "$conf_dir"/gitlab-shell-config.yml "$gitlab_shell"/config.yml
 
     if [ ! -f "$conf_dir"/gitaly-config.toml ]; then
         uninitialized_confdir=1
