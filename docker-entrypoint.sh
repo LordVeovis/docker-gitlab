@@ -57,6 +57,7 @@ if [ -d "$conf_dir" ]; then
         mv "$gitlab_home"/config/secrets.yml.example "$conf_dir"/secrets.yml
     fi
     [ -L "$gitlab_home"/config/secrets.yml ] || ln -fs "$conf_dir"/secrets.yml "$gitlab_home"/config/secrets.yml
+    [ -L "$gitlab_shell"/.gitlab_shell_secret ] || ln -fs "$conf_dir"/gitlab_shell_secret "$gitlab_shell"/.gitlab_shell_secret
 
     if [ ! -f "$conf_dir"/unicorn.rb ]; then
         uninitialized_confdir=1
