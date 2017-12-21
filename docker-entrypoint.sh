@@ -107,7 +107,7 @@ if [ -d "$conf_dir" ]; then
     cp -d /config/ssh/ssh_host_* /etc/ssh/
     chmod 400 /etc/ssh/ssh_host_*
 
-    [ -f "$conf_dir"/authorized_keys ] || touch "$conf_dir"/authorized_keys && chmod git:git "$conf_dir"/authorized_keys
+    [ -f "$conf_dir"/authorized_keys ] || touch "$conf_dir"/authorized_keys && chown git:git "$conf_dir"/authorized_keys
     [ -L "$gitlab_home"/../.ssh/authorized_keys ] || mkdir -p "$gitlab_home"/../.ssh && ln -sf "$conf_dir"/authorized_keys "$gitlab_home"/../.ssh/authorized_keys
 fi
 
