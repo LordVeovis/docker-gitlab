@@ -3,7 +3,7 @@
 # About
 
 This is a docker container for Gitlab build around Alpine Linux for compacity as an alternative to the fat official Omnibus package.
-This project is abandonned, the needed effort to reduce the image size was not worth it. You can read more at (in french): https://blog.kveer.fr/wp-admin/post.php?post=700&action=edit
+This project is abandonned, the needed effort to reduce the image size was not worth it. You can read more at (in french): https://blog.kveer.fr/?p=700&preview=true
 
 # Technical stack
 
